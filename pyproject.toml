@@ -19,3 +19,10 @@ dependencies = [
     "python-decouple>=3.8",
     "redis>=6.1.0",
 ]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["jota_api", "users", "subscription"]
