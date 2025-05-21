@@ -8,7 +8,6 @@ from datetime import timedelta
 from users.permissions import IsSelfOrAdmin
 from .models import SubscriptionPlan, UserSubscription
 from .serializers import SubscriptionPlanSerializer, UserSubscriptionSerializer
-from users.models import User
 
 
 class SubscriptionPlanViewSet(viewsets.ModelViewSet):

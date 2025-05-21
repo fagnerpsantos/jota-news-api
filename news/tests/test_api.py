@@ -2,7 +2,6 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 from news.models import News
-from unittest.mock import patch
 
 pytestmark = pytest.mark.django_db
 

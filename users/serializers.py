@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from subscription.models import SubscriptionPlan, UserSubscription
 
 User = get_user_model()
@@ -129,75 +129,3 @@ class UserSubscriptionSerializer(serializers.ModelSerializer):
         model = UserSubscription
         fields = ['id', 'user', 'plan', 'plan_id', 'start_date', 'end_date', 'is_active']
         read_only_fields = ['user', 'start_date', 'is_active']
-
-
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """
-    Serializer personalizado para incluir dados adicionais no token JWT
-    """
-
-    def validate(self, attrs):
-        data = super().validate(attrs)
-
-        # Dados padrão do token
-        refresh = self.get_token(self.user)
-        data['refresh'] = str(refresh)
-        data['access'] = str(refresh.access_token)
-
-        # Dados adicionais do usuário
-        data['user'] = {
-            'id': self.user.id,
-            'username': self.user.username,
-            'email': self.user.email,
-            'role': self.user.role,
-            'first_name': self.user.first_name,
-            'last_name': self.user.last_name
-        }
-
-        # Informações de assinatura se existirem
-        if hasattr(self.user, 'subscription'):
-            subscription = self.user.subscription
-            data['subscription'] = {
-                'plan': subscription.plan.name,
-                'start_date': subscription.start_date,
-                'end_date': subscription.end_date,
-                'is_active': subscription.is_active,
-                'categories': [cat.name for cat in subscription.plan.categories.all()]
-            }
-
-        return data
-
-
-class CustomTokenRefreshSerializer(TokenRefreshSerializer):
-    """
-    Serializer personalizado para manter dados do usuário ao refrescar o token
-    """
-
-    def validate(self, attrs):
-        data = super().validate(attrs)
-
-        # Decodifica o novo access token para obter o user_id
-        from rest_framework_simplejwt.tokens import AccessToken
-        access_token = AccessToken(data['access'])
-        user_id = access_token['user_id']
-
-        # Adiciona os dados do usuário à resposta
-        try:
-            user = User.objects.get(id=user_id)
-            data['user'] = {
-                'id': user.id,
-                'username': user.username,
-                'email': user.email,
-                'role': user.role
-            }
-
-            if hasattr(user, 'subscription'):
-                subscription = user.subscription
-                data['subscription'] = {
-                    'plan': subscription.plan.name,
-                    'is_active': subscription.is_active
-                }
-        except User.DoesNotExist:
-            pass
-
-        return data

@@ -1,0 +1,20 @@
+Metadata-Version: 2.4
+Name: jota-api
+Version: 0.1.0
+Summary: Add your description here
+Requires-Python: >=3.12
+Requires-Dist: celery>=5.5.2
+Requires-Dist: dj-database-url>=2.3.0
+Requires-Dist: django>=5.2.1
+Requires-Dist: django-cors-headers>=4.7.0
+Requires-Dist: django-filter>=25.1
+Requires-Dist: djangorestframework>=3.16.0
+Requires-Dist: djangorestframework-simplejwt>=5.5.0
+Requires-Dist: drf-yasg>=1.21.10
+Requires-Dist: gunicorn>=23.0.0
+Requires-Dist: pillow>=11.2.1
+Requires-Dist: psycopg2-binary>=2.9.10
+Requires-Dist: pytest>=8.3.5
+Requires-Dist: python-decouple>=3.8
+Requires-Dist: redis>=6.1.0
+Requires-Dist: ruff>=0.11.10

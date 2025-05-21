@@ -1,11 +1,10 @@
 import pytest
 import django
-from django.conf import settings
 
 # Configurar o Django antes de importar os modelos
 try:
     django.setup()
-except:
+except:  # noqa
     pass
 
 @pytest.fixture

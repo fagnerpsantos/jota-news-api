@@ -1,15 +1,11 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.tokens import AccessToken
 
 from .models import User
-from .serializers import UserSerializer, UserRegistrationSerializer, UserSubscriptionSerializer, \
-    CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer
+from .serializers import UserSerializer, UserRegistrationSerializer, UserSubscriptionSerializer
 from .permissions import IsSelfOrAdmin
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
 class UserViewSet(viewsets.ModelViewSet):

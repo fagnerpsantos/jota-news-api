@@ -3,10 +3,6 @@ from rest_framework.test import APITestCase, APIClient
 from django.contrib.auth import get_user_model
 from news.models import News, Category
 from rest_framework import status
-from datetime import timedelta
-from django.utils import timezone
-import json
-from unittest.mock import patch
 
 User = get_user_model()
 

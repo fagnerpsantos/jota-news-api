@@ -4,7 +4,6 @@ from news.models import News, Category
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
 from django.utils import timezone
-from datetime import timedelta
 
 User = get_user_model()
 

@@ -1,0 +1,93 @@
+name: AWS Deploy (Simulação)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Permite execução manual
+
+jobs:
+  deploy:
+    name: Deploy Simulado para AWS
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Simulação - Configuração de credenciais AWS
+      run: |
+        echo "Simulando configuração de credenciais AWS..."
+        echo "aws configure set aws_access_key_id AKIAIOSFODNN7EXAMPLE"
+        echo "aws configure set aws_secret_access_key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+        echo "aws configure set default.region us-east-1"
+
+    - name: Simulação - Login no Amazon ECR
+      run: |
+        echo "Simulando login no Amazon ECR..."
+        echo "aws ecr get-login-password | docker login --username AWS --password-stdin 123456789012.dkr.ecr.us-east-1.amazonaws.com"
+        echo "Login bem-sucedido no ECR"
+
+    - name: Simulação - Build e push da imagem Docker
+      run: |
+        echo "Simulando build da imagem Docker..."
+        echo "docker build -t jota-api:latest ."
+        
+        echo "Simulando tag da imagem para ECR..."
+        echo "docker tag jota-api:latest 123456789012.dkr.ecr.us-east-1.amazonaws.com/jota-api:latest"
+        
+        echo "Simulando push para ECR..."
+        echo "docker push 123456789012.dkr.ecr.us-east-1.amazonaws.com/jota-api:latest"
+        
+        echo "Imagem enviada com sucesso para o ECR"
+
+    - name: Simulação - Deploy para ECS
+      run: |
+        echo "Simulando atualização do serviço ECS..."
+        echo "aws ecs update-service --cluster jota-cluster --service jota-api-service --force-new-deployment"
+        
+        echo "Simulando espera pela estabilização do serviço..."
+        echo "aws ecs wait services-stable --cluster jota-cluster --services jota-api-service"
+        
+        echo "Serviço ECS atualizado com sucesso"
+
+    - name: Simulação - Execução de migrações do banco de dados
+      run: |
+        echo "Simulando execução de migrações do banco de dados..."
+        echo "aws ecs run-task --cluster jota-cluster --task-definition jota-migrations --launch-type FARGATE --network-configuration 'awsvpcConfiguration={subnets=[subnet-12345],securityGroups=[sg-12345],assignPublicIp=ENABLED}'"
+        
+        echo "Migrações executadas com sucesso"
+
+    - name: Simulação - Invalidação de cache do CloudFront
+      run: |
+        echo "Simulando invalidação de cache do CloudFront..."
+        echo "aws cloudfront create-invalidation --distribution-id E1EXAMPLE --paths '/*'"
+        
+        echo "Cache do CloudFront invalidado com sucesso"
+
+    - name: Simulação - Notificação de deploy bem-sucedido
+      run: |
+        echo "Simulando envio de notificação para o Slack..."
+        echo "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"JOTA API deployed successfully to AWS :rocket:\"}' https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
+        
+        echo "Notificação enviada com sucesso"
+
+    - name: Simulação - Verificação de saúde da aplicação
+      run: |
+        echo "Simulando verificação de saúde da aplicação..."
+        echo "curl -s -o /dev/null -w '%{http_code}' https://api.jota.news/health/"
+        echo "200"
+        
+        echo "Aplicação está saudável"
+
+    - name: Resumo do deploy
+      run: |
+        echo "======================="
+        echo "DEPLOY SIMULADO CONCLUÍDO"
+        echo "======================="
+        echo "Aplicação: JOTA API"
+        echo "Ambiente: Produção"
+        echo "Versão: ${{ github.sha }}"
+        echo "Data: $(date)"
+        echo "Autor: ${{ github.actor }}"
+        echo "======================="
+

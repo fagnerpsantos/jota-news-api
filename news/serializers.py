@@ -1,7 +1,6 @@
 from django.utils import timezone
 from rest_framework import serializers
 from .models import News, Category
-from users.models import User
 
 
 class CategorySerializer(serializers.ModelSerializer):

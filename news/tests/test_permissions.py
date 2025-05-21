@@ -2,7 +2,6 @@ from django.test import TestCase, RequestFactory
 from news.models import News
 from users.permissions import IsEditorOrReadOnly, IsAdminOrReadOnly, IsOwnerOrReadOnly
 from django.contrib.auth import get_user_model
-from rest_framework.exceptions import PermissionDenied
 
 User = get_user_model()
 
