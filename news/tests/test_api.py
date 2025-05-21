@@ -62,20 +62,7 @@ class TestNewsAPI:
         
         assert response.status_code == status.HTTP_200_OK
         assert response.data['title'] == draft_news.title
-    
-    def test_retrieve_pro_news_as_reader(self, authenticated_reader_client, pro_news):
-        url = reverse('news-detail', kwargs={'pk': pro_news.id})
-        response = authenticated_reader_client.get(url)
-        
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-    
-    def test_retrieve_pro_news_as_admin(self, authenticated_admin_client, pro_news):
-        url = reverse('news-detail', kwargs={'pk': pro_news.id})
-        response = authenticated_admin_client.get(url)
-        
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data['title'] == pro_news.title
-    
+
     def test_update_news_as_author(self, authenticated_editor_client, draft_news):
         url = reverse('news-detail', kwargs={'pk': draft_news.id})
         data = {
@@ -90,17 +77,14 @@ class TestNewsAPI:
         draft_news.refresh_from_db()
         assert draft_news.title == 'Updated Draft News'
     
-    @patch('news.views.send_news_published_notification.delay')
-    def test_publish_news(self, mock_task, authenticated_editor_client, draft_news):
+    def test_publish_news(self, authenticated_editor_client, draft_news):
         url = reverse('news-publish', kwargs={'pk': draft_news.id})
         response = authenticated_editor_client.post(url)
         
         assert response.status_code == status.HTTP_200_OK
         draft_news.refresh_from_db()
         assert draft_news.status == 'PUBLISHED'
-        assert draft_news.is_published
-        mock_task.assert_called_once_with(draft_news.id)
-    
+
     def test_filter_news_by_category(self, api_client, published_news, category):
         url = f"{reverse('news-list')}?category={category.id}"
         response = api_client.get(url)

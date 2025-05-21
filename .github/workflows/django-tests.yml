@@ -48,14 +48,19 @@ jobs:
         python -m pip install --upgrade pip
         pip install uv
         uv pip install --system -e .
+        pip install pytest-django
         
     - name: Run tests
       env:
-        DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres_test
+        DB_NAME: postgres_test
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+        DB_HOST: localhost
+        DB_PORT: 5432
         REDIS_URL: redis://localhost:6379/0
         DJANGO_SETTINGS_MODULE: jota_api.settings
       run: |
-        pytest
+        pytest --ds=jota_api.settings
         
     - name: Lint with Ruff
       run: |
